@@ -1,0 +1,9 @@
+git add .
+git commit -m "solved hydration errors"
+git push
+
+
+create a todo list using html, css, and js
+
+
+to start backend => npm run start:dev
