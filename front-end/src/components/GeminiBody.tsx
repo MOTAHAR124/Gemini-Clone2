@@ -44,30 +44,42 @@ const GeminiBody = () => {
               </p>
               <p>How can I help you today?</p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-5">
-              <div className="h-32 md:h-48 p-3 md:p-4 bg-bgSecondaryColor rounded-xl relative cursor-pointer">
-                <p>Suggest beautiful places to see on an upcoming road trip</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-5 text-gray-100">
+              <div
+                className="h-32 md:h-48 p-3 md:p-4 bg-bgSecondaryColor rounded-xl relative cursor-pointer"
+                onClick={() => setInput("Suggest beautiful places to see on an upcoming road trip.")}
+              >
+                <p>Suggest beautiful places to see on an upcoming road trip.</p>
                 <Compass
                   size={28}
                   className="p-1 absolute bottom-2 right-2 bg-bgPrimaryColor text-softTextColor rounded-full md:size-9"
                 />
               </div>
-              <div className="h-32 md:h-48 p-3 md:p-4 bg-bgSecondaryColor rounded-xl relative cursor-pointer">
-                <p>What's the reaction to and impact of autonomous vehicles</p>
+              <div
+                className="h-32 md:h-48 p-3 md:p-4 bg-bgSecondaryColor rounded-xl relative cursor-pointer"
+                onClick={() => setInput("What's the reaction to and impact of autonomous vehicles.")}
+              >
+                <p>What's the reaction to and impact of autonomous vehicles.</p>
                 <Lightbulb
                   size={28}
                   className="p-1 absolute bottom-2 right-2 bg-bgPrimaryColor text-softTextColor rounded-full md:size-9"
                 />
               </div>
-              <div className="h-32 md:h-48 p-3 md:p-4 bg-bgSecondaryColor rounded-xl relative cursor-pointer">
-                <p>Come up with a recipe for an upcoming event</p>
+              <div
+                className="h-32 md:h-48 p-3 md:p-4 bg-bgSecondaryColor rounded-xl relative cursor-pointer"
+                onClick={() => setInput("Come up with a recipe for an upcoming event.")}
+              >
+                <p>Come up with a recipe for an upcoming event.</p>
                 <Youtube
                   size={28}
                   className="p-1 absolute bottom-2 right-2 bg-bgPrimaryColor text-softTextColor rounded-full md:size-9"
                 />
               </div>
-              <div className="h-32 md:h-48 p-3 md:p-4 bg-bgSecondaryColor rounded-xl relative cursor-pointer">
-                <p>Evaluate and rank common camera categories</p>
+              <div
+                className="h-32 md:h-48 p-3 md:p-4 bg-bgSecondaryColor rounded-xl relative cursor-pointer"
+                onClick={() => setInput("Evaluate and rank common camera categories.")}
+              >
+                <p>Evaluate and rank common camera categories.</p>
                 <Code
                   size={28}
                   className="p-1 absolute bottom-2 right-2 bg-bgPrimaryColor text-softTextColor rounded-full md:size-9"
