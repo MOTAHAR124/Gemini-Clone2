@@ -1,5 +1,5 @@
 git add .
-git commit -m "solved hydration errors"
+git commit -m "added automatically scroll down"
 git push
 
 

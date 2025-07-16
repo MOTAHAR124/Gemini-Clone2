@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext } from "react";
+import React, { useContext, useRef, useEffect } from "react";
 import {
   CircleUserRound,
   Compass,
@@ -24,6 +24,13 @@ const GeminiBody = () => {
     conversation,
   } = useContext(Context) as ContextType;
   console.log(loading, "loading");
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (bottomRef.current) {
+      bottomRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [conversation, loading]);
   return (
     <div className="flex-1 min-h-screen relative ml-0 ">
       {/* Fixed Header */}
@@ -105,6 +112,7 @@ const GeminiBody = () => {
                 </div>
               )
             )}
+            <div ref={bottomRef} />
           </div>
         )}
       </div>
