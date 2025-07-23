@@ -1,5 +1,5 @@
 git add .
-git commit -m "solved login error"
+git commit -m "added icons and its functions"
 git push
 
 
