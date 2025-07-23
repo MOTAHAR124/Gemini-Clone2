@@ -66,7 +66,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
             <ContextProvider>{children}</ContextProvider>
           </SignedIn>
           <SignedOut>
-            <SignIn />
+            <div className="min-h-screen flex items-center justify-center">
+              <SignIn />
+            </div>
           </SignedOut>
         </body>
       </html>

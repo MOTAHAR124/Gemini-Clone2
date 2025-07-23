@@ -24,11 +24,16 @@ const GeminiBody = () => {
     conversation,
   } = useContext(Context) as ContextType;
   console.log(loading, "loading");
+  const resultRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (bottomRef.current) {
-      bottomRef.current.scrollIntoView({ behavior: "smooth" });
+    const resultEl = resultRef.current;
+    if (resultEl && bottomRef.current) {
+      // Only scroll if content overflows
+      if (resultEl.scrollHeight > resultEl.clientHeight) {
+        bottomRef.current.scrollIntoView({ behavior: "smooth" });
+      }
     }
   }, [conversation, loading]);
   return (
@@ -95,7 +100,7 @@ const GeminiBody = () => {
             </div>
           </>
         ) : (
-          <div className="result">
+          <div className="result" ref={resultRef}>
             {conversation.map((msg, idx) =>
               msg.role === "user" ? (
                 <div key={idx} className="my-4 sm:my-6 md:my-10 flex items-center justify-end gap-2 sm:gap-3 md:gap-5 pr-2 sm:pr-4 md:pr-40">
@@ -130,9 +135,12 @@ const GeminiBody = () => {
                 className="flex-1 bg-transparent border-none outline-none p-1 sm:p-2 text-base sm:text-lg text-gray-400"
                 placeholder="Enter a prompt here .."
               />
-              <div className="flex cursor-pointer">
-                <SendHorizontal type="submit" size={18} />
-              </div>
+              {/* Replace the div with a button for submit functionality */}
+              {input && input.trim() !== "" && (
+                <button type="submit" className="flex cursor-pointer" aria-label="Send">
+                  <SendHorizontal size={30} color="white" />
+                </button>
+              )}
             </div>
           </form>
           <p className="text-gray-400 text-[10px] sm:text-xs md:text-sm text-center p-1 sm:p-2 md:p-3">

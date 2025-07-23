@@ -1,5 +1,5 @@
 git add .
-git commit -m "added automatically scroll down"
+git commit -m "solved login error"
 git push
 
 

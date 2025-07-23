@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import GeminiBody from "../components/GeminiBody";
-import Sidebar from "../components/Sidebar";
+import React from "react";
+import GeminiBody from "../../components/GeminiBody";
+import Sidebar from "../../components/Sidebar";
 
 export default function Home() {
   // Sidebar open state is now managed in Sidebar, so layout is always full width
@@ -12,4 +12,4 @@ export default function Home() {
       </div>
     </div>
   );
-}
+} 
