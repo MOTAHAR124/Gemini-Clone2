@@ -340,7 +340,7 @@ const GeminiBody = () => {
           <form onSubmit={handleSubmit}>
             <div className="flex items-center justify-between gap-2 sm:gap-3 md:gap-5 bg-bgSecondaryColor py-1 sm:py-2 md:py-2.5 px-2 sm:px-3 md:px-5 rounded-full">
               <Plus 
-                size={20} 
+                size={28} 
                 className="text-gray-400 cursor-pointer hover:text-gray-300 transition-colors" 
                 onClick={handlePlusClick}
               />
