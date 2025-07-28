@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { Context } from "../context/ContextProvider";
 import type { ContextType } from "../context/ContextProvider";
+import LoadingLogo from "./LoadingLogo";
 
 interface UploadedFile {
   id: string;
@@ -37,13 +38,17 @@ interface UploadedFile {
 const GeminiBody = () => {
   const {
     submit,
+    stopGeneration,
+    stopApiCall,
     recentPrompts,
     displayResult,
     loading,
+    isApiLoading,
     result,
     input,
     setInput,
     conversation,
+    isAnimationPaused,
   } = useContext(Context) as ContextType;
   
   console.log(loading, "loading");
@@ -254,12 +259,16 @@ const GeminiBody = () => {
               msg.role === "user" ? (
                 <div key={idx} className="my-4 sm:my-6 md:my-10 flex items-center justify-end gap-2 sm:gap-3 md:gap-5 pr-2 sm:pr-4 md:pr-40">
                   <div className="flex items-center gap-2">
-                    <SquarePen size={20} className="text-softTextColor cursor-pointer" onClick={() => setInput(msg.content)} />
-                    {copiedIdx === idx ? (
-                      <CheckLine size={20} className="text-white" />
-                    ) : (
-                      <Copy size={20} className="text-softTextColor cursor-pointer" onClick={() => handleCopy(msg.content, idx)} />
-                    )}
+                    <div className="flex-shrink-0 w-5 h-5 flex items-center justify-center">
+                      <SquarePen size={20} className="text-softTextColor cursor-pointer" onClick={() => setInput(msg.content)} />
+                    </div>
+                    <div className="flex-shrink-0 w-5 h-5 flex items-center justify-center">
+                      {copiedIdx === idx ? (
+                        <CheckLine size={20} className="text-white" />
+                      ) : (
+                        <Copy size={20} className="text-softTextColor cursor-pointer" onClick={() => handleCopy(msg.content, idx)} />
+                      )}
+                    </div>
                     <p className="entered-prompt text-white text-xs sm:text-base mr-[-40px] sm:mr-[-100px] text-right px-2 sm:px-3 md:px-4 py-1 sm:py-2 rounded-xl" style={{ backgroundColor: '#333537' }}>{msg.content}</p>
                   </div>
                 </div>
@@ -287,6 +296,14 @@ const GeminiBody = () => {
                   </div>
                 </div>
               )
+            )}
+            {isApiLoading && (
+              <div className="flex flex-col md:flex-row items-start gap-2 sm:gap-3 md:gap-5 ml-[-30px] sm:ml-[-70px]">
+                <img src="/gemini.png" alt="" className="w-8 h-8 sm:w-10 sm:h-10 md:w-14 md:h-14" />
+                <div className="flex items-center gap-3">
+                  <span className="text-gray-400 text-sm">Generating response... </span>
+                </div>
+              </div>
             )}
             <div ref={bottomRef} />
           </div>
@@ -352,11 +369,15 @@ const GeminiBody = () => {
                 className="input-area flex-1 bg-transparent border-none outline-none p-1 sm:p-2 text-base sm:text-lg text-gray-400"
                 placeholder="Enter a prompt here .."
               />
-              {(input && input.trim() !== "") || uploadedFiles.length > 0 ? (
-                <button type="submit" className="flex cursor-pointer" aria-label="Send">
-                  <SendHorizontal size={30} color="white" />
-                </button>
-              ) : null}
+              <div className="flex items-center gap-2">
+                {(isApiLoading || loading) ? (
+                  <LoadingLogo size={35} className="animate-pulse" onClick={isApiLoading ? stopApiCall : stopGeneration} />
+                ) : ((input && input.trim() !== "") || uploadedFiles.length > 0) ? (
+                  <button type="submit" className="flex cursor-pointer" aria-label="Send">
+                    <SendHorizontal size={30} color="white" />
+                  </button>
+                ) : null}
+              </div>
             </div>
           </form>
           <p className="text-gray-400 text-[10px] sm:text-xs md:text-sm text-center p-1 sm:p-2 md:p-3">

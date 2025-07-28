@@ -1,15 +1,18 @@
 "use client";
 import runChat from "../lib/gemini";
-import React, { createContext, useState, ReactNode } from "react";
+import React, { createContext, useState, ReactNode, useEffect } from "react";
 
 interface ContextType {
   theme: string;
   toggle: () => void;
   submit: (prompt: string) => Promise<void>;
+  stopGeneration: () => void;
+  stopApiCall: () => void;
   setInput: React.Dispatch<React.SetStateAction<string>>;
   input: string;
   result: string;
   loading: boolean;
+  isApiLoading: boolean;
   displayResult: boolean;
   recentPrompts: string;
   setRecentPrompts: React.Dispatch<React.SetStateAction<string>>;
@@ -18,6 +21,7 @@ interface ContextType {
   setDisplayResult: React.Dispatch<React.SetStateAction<boolean>>;
   conversation: {role: "user" | "bot", content: string}[];
   newChat: () => void;
+  isAnimationPaused: boolean;
 }
 
 export const Context = createContext<ContextType | undefined>(undefined);
@@ -36,6 +40,9 @@ const ContextProvider = ({ children }: ContextProviderProps) => {
   const [prevPrompts, setPrevPrompts] = useState<string[]>([]);
   const [conversation, setConversation] = useState<{role: "user" | "bot", content: string}[]>([]);
   const [isNewChat, setIsNewChat] = useState<boolean>(true);
+  const [abortController, setAbortController] = useState<AbortController | null>(null);
+  const [animationTimeouts, setAnimationTimeouts] = useState<NodeJS.Timeout[]>([]);
+  const [isAnimationPaused, setIsAnimationPaused] = useState<boolean>(false);
 
   // Process text with formatting
   const processText = (text: string): string => {
@@ -57,34 +64,104 @@ const ContextProvider = ({ children }: ContextProviderProps) => {
     });
   };
 
+  // Animation state
+  const [animationState, setAnimationState] = useState<{
+    text: string;
+    current: string;
+    currentIndex: number;
+    isActive: boolean;
+  } | null>(null);
+  
+  // Separate loading state for API call vs text animation
+  const [isApiLoading, setIsApiLoading] = useState<boolean>(false);
+
   // Animated bot response for conversation
   const animateBotResponse = (text: string) => {
-    let current = "";
-    const words = text.split(" ");
-    words.forEach((word, idx) => {
-      setTimeout(() => {
-        current += (current ? " " : "") + word;
-        setConversation(prev => {
-          // If last message is bot, update it; else, add new bot message
-          if (prev.length && prev[prev.length - 1].role === "bot") {
-            return [
-              ...prev.slice(0, -1),
-              { role: "bot", content: current }
-            ];
-          } else {
-            return [
-              ...prev,
-              { role: "bot", content: current }
-            ];
-          }
-        });
-      }, 30 * idx); // 30ms per word
+    setAnimationState({
+      text,
+      current: "",
+      currentIndex: 0,
+      isActive: true
+    });
+  };
+
+  // Handle animation step
+  useEffect(() => {
+    if (animationState && animationState.isActive && !isAnimationPaused) {
+      const words = animationState.text.split(" ");
+      
+      if (animationState.currentIndex < words.length) {
+        const timer = setTimeout(() => {
+          const newCurrent = animationState.current + (animationState.currentIndex === 0 ? "" : " ") + words[animationState.currentIndex];
+          
+          setConversation(prev => {
+            if (prev.length && prev[prev.length - 1].role === "bot") {
+              return [
+                ...prev.slice(0, -1),
+                { role: "bot", content: newCurrent }
+              ];
+            } else {
+              return [
+                ...prev,
+                { role: "bot", content: newCurrent }
+              ];
+            }
+          });
+          
+          setAnimationState(prev => prev ? {
+            ...prev,
+            current: newCurrent,
+            currentIndex: prev.currentIndex + 1
+          } : null);
+        }, 30);
+        
+        return () => clearTimeout(timer);
+      } else {
+        // Animation complete
+        setLoading(false);
+        setAbortController(null);
+        setIsAnimationPaused(false);
+        setAnimationState(null);
+      }
+    }
+  }, [animationState, isAnimationPaused]);
+
+  // Pause/Resume generation function
+  const stopGeneration = () => {
+    if (isAnimationPaused) {
+      // Resume animation
+      setIsAnimationPaused(false);
+    } else {
+      // Pause animation
+      setIsAnimationPaused(true);
+    }
+  };
+  
+  // Stop API call function
+  const stopApiCall = () => {
+    if (abortController) {
+      abortController.abort();
+      setAbortController(null);
+    }
+    setIsApiLoading(false);
+    setLoading(false);
+    // Remove the last bot message if it was incomplete
+    setConversation(prev => {
+      if (prev.length > 0 && prev[prev.length - 1].role === "bot") {
+        return prev.slice(0, -1);
+      }
+      return prev;
     });
   };
 
   // on submit
   const submit = async (prompt: string) => {
     try {
+      // Create new AbortController for this request
+      const controller = new AbortController();
+      setAbortController(controller);
+      
+      setIsApiLoading(true);
       setLoading(true);
       setResult("");
       setDisplayResult(true);
@@ -97,17 +174,23 @@ const ContextProvider = ({ children }: ContextProviderProps) => {
         setIsNewChat(false);
       }
 
-      const response = await runChat(prompt);
+      const response = await runChat(prompt, controller.signal);
       const processedText = processText(response);
 
-      // Animate bot response
+      // Stop API loading and start text animation
+      setIsApiLoading(false);
       animateBotResponse(processedText);
       setInput("");
     } catch (error) {
-      console.error("Error generating response:", error);
-      setResult("Sorry, there was an error generating the response. Please try again.");
-    } finally {
+      if (error instanceof Error && error.name === 'AbortError') {
+        console.log('Request was aborted');
+      } else {
+        console.error("Error generating response:", error);
+        setResult("Sorry, there was an error generating the response. Please try again.");
+      }
       setLoading(false);
+      setIsApiLoading(false);
+      setAbortController(null);
     }
   };
 
@@ -128,10 +211,13 @@ const ContextProvider = ({ children }: ContextProviderProps) => {
     theme,
     toggle,
     submit,
+    stopGeneration,
+    stopApiCall,
     setInput,
     input,
     result,
     loading,
+    isApiLoading,
     displayResult,
     recentPrompts,
     setRecentPrompts,
@@ -140,6 +226,7 @@ const ContextProvider = ({ children }: ContextProviderProps) => {
     setDisplayResult,
     conversation,
     newChat,
+    isAnimationPaused,
   };
 
   return (

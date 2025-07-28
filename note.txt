@@ -1,12 +1,12 @@
 git add .
-git commit -m "did some minor changes"
+git commit -m "added logo to pause generating text"
 git push
 
 
 create a todo list using html, css, and js
 
-to start front-end => pnpm run dev
-to start back-end => pnpm run start:dev
+to start front-end => yarn run dev
+to start back-end => yarn run start:dev
 
 to install = Navigate to both the front-end and back-end directories, run yarn in each terminal to install dependencies, 
              and in the back-end, create a .env file and add the line GEMINI_API_KEY=your_key_here
