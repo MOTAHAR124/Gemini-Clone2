@@ -174,7 +174,12 @@ const ContextProvider = ({ children }: ContextProviderProps) => {
         setIsNewChat(false);
       }
 
-      const response = await runChat(prompt, controller.signal);
+      // Log conversation context for debugging
+      console.log('Sending conversation context:', conversation);
+      console.log('Current prompt:', prompt);
+
+      // Pass conversation history for context-aware responses
+      const response = await runChat(prompt, conversation, controller.signal);
       const processedText = processText(response);
 
       // Stop API loading and start text animation

@@ -1,5 +1,5 @@
 git add .
-git commit -m "added logo to pause generating text"
+git commit -m "give related answers"
 git push
 
 

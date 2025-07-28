@@ -9,12 +9,20 @@ import {
 
 const MODEL_NAME = "gemini-2.0-flash";
 
-async function runChat(prompt: string, signal?: AbortSignal): Promise<string> {
-  // Call the backend API instead of using the API key here
+interface ConversationMessage {
+  role: "user" | "bot";
+  content: string;
+}
+
+async function runChat(prompt: string, conversation?: ConversationMessage[], signal?: AbortSignal): Promise<string> {
+  // Call the backend API with conversation history for context-aware responses
   const response = await fetch("http://localhost:3001/gemini", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ prompt }),
+    body: JSON.stringify({ 
+      prompt,
+      conversation: conversation || []
+    }),
     signal,
   });
   if (!response.ok) throw new Error("Backend error");
@@ -23,3 +31,4 @@ async function runChat(prompt: string, signal?: AbortSignal): Promise<string> {
 }
 
 export default runChat;
+export type { ConversationMessage };
