@@ -27,6 +27,7 @@ const GeminiBody = () => {
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [showFilePreview, setShowFilePreview] = useState<boolean>(false);
 
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
@@ -70,23 +71,18 @@ const GeminiBody = () => {
     }
   };
 
-  // Enhanced submit function to handle files
-  const handleSubmit = (e: React.FormEvent) => {
+
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Here you would typically process the files along with the text input
-    // For now, we'll just submit the text and log the files
-    if (uploadedFiles.length > 0) {
-      console.log('Files to upload:', uploadedFiles);
-      // You can process files here - upload to server, convert to base64, etc.
-    }
-    
     submit(input);
     
     // Clear files after submit
     setUploadedFiles([]);
     setShowFilePreview(false);
   };
+
+
 
   useEffect(() => {
     const resultEl = resultRef.current;

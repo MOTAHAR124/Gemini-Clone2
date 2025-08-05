@@ -14,10 +14,23 @@ import type { ContextType } from "../context/ContextProvider";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isHovered, setIsHovered] = useState<boolean>(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const { setDisplayResult, setInput, prevPrompts, setRecentPrompts, submit, newChat } =
     useContext(Context) as ContextType;
+
+  // Handle mouse enter on sidebar area
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+    setIsOpen(true);
+  };
+
+  // Handle mouse leave from sidebar area
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    setIsOpen(false);
+  };
 
   useEffect(() => {
     if (!isOpen) return;
@@ -41,7 +54,7 @@ const Sidebar = () => {
     setRecentPrompts(prompt);
     submit(prompt);
   };
-  
+
   return (
     <>
       {/* Overlay for mobile sidebar */}
@@ -67,6 +80,8 @@ const Sidebar = () => {
         className={`fixed top-0 left-0 h-screen bg-bgSecondaryColor py-6 px-4 flex flex-col justify-between z-20 transition-all duration-300 ${
           isOpen ? 'w-[250px]' : 'w-[70px] overflow-hidden'
         }`}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
         {isOpen && (
           <>

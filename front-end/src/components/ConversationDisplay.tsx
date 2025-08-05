@@ -11,8 +11,10 @@ import {
   EllipsisVertical,
 } from "lucide-react";
 
+import type { ConversationMessage } from "../types";
+
 interface ConversationDisplayProps {
-  conversation: { role: "user" | "bot"; content: string }[];
+  conversation: ConversationMessage[];
   setInput: (input: string) => void;
   isApiLoading: boolean;
 }

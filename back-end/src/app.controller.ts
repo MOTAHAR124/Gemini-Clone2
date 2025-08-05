@@ -3,6 +3,7 @@ import { AppService } from './app.service';
 import { ConfigService } from '@nestjs/config';
 import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from '@google/generative-ai';
 
+
 interface ConversationMessage {
   role: 'user' | 'bot';
   content: string;
@@ -17,7 +18,7 @@ interface GeminiRequest {
 export class AppController {
   constructor(
     private readonly appService: AppService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
   ) {}
 
   @Get()
