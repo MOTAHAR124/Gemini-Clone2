@@ -23,7 +23,7 @@ const SuggestionCards: React.FC<SuggestionCardsProps> = ({ setInput }) => {
         className="h-32 md:h-48 p-3 md:p-4 bg-bgSecondaryColor rounded-xl relative cursor-pointer transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg"
         onClick={() => setInput("What's the reaction to and impact of autonomous vehicles.")}
       >
-        <p>What's the reaction to and impact of autonomous vehicles.</p>
+        <p>What&apos;s the reaction to and impact of autonomous vehicles.</p>
         <Lightbulb
           size={28}
           className="p-1 absolute bottom-2 right-2 bg-bgPrimaryColor text-softTextColor rounded-full md:size-9 transition-transform duration-300 group-hover:scale-110"
