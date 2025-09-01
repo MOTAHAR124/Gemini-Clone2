@@ -21,7 +21,7 @@ const SuggestionCards: React.FC<SuggestionCardsProps> = ({ setInput }) => {
       </div>
       <div
         className="h-32 md:h-48 p-3 md:p-4 bg-bgSecondaryColor rounded-xl relative cursor-pointer transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg"
-        onClick={() => setInput("What's the reaction to and impact of autonomous vehicles.")}
+        onClick={() => setInput("What is the reaction to and impact of autonomous vehicles.")}
       >
         <p>What&apos;s the reaction to and impact of autonomous vehicles.</p>
         <Lightbulb
