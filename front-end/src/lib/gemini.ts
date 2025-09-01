@@ -16,7 +16,8 @@ interface ConversationMessage {
 
 async function runChat(prompt: string, conversation?: ConversationMessage[], signal?: AbortSignal): Promise<string> {
   // Call the backend API with conversation history for context-aware responses
-  const response = await fetch("http://localhost:3001/gemini", {
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3001";
+  const response = await fetch(`${baseUrl}/gemini`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ 
