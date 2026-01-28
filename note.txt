@@ -1,5 +1,5 @@
 git add .
-git commit -m "using gemini 2.5 flash"
+git commit -m "hide .env file"
 git push
 
 
