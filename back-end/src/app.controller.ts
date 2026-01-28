@@ -38,7 +38,7 @@ export class AppController {
     console.log('Current prompt:', prompt);
 
     const genAI = new GoogleGenerativeAI(apiKey as string);
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
     
     const generationConfig = {
       temperature: 0.9,
