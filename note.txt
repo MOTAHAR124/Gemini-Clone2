@@ -1,5 +1,5 @@
 git add .
-git commit -m "hide .env file"
+git commit -m "updated packages"
 git push
 
 
