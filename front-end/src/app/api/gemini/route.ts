@@ -55,8 +55,31 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ text: response.text() });
   } catch (err) {
+    const message =
+      err instanceof Error
+        ? err.message
+        : typeof err === "string"
+          ? err
+          : "Unknown error";
+
     console.error("/api/gemini error:", err);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+
+    let status = 500;
+    if (err && typeof err === "object" && "status" in err && typeof (err as { status?: unknown }).status === "number") {
+      status = (err as { status: number }).status;
+    } else {
+      const match = message.match(/\[(\d{3})\s/);
+      if (match) {
+        const parsed = Number(match[1]);
+        if (Number.isFinite(parsed) && parsed >= 400 && parsed <= 599) status = parsed;
+      }
+    }
+
+    const isDev = process.env.NODE_ENV !== "production";
+    return NextResponse.json(
+      { error: isDev ? message : "Internal Server Error" },
+      { status }
+    );
   }
 }
 

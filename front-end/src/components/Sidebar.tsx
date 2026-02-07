@@ -67,7 +67,7 @@ const Sidebar = () => {
       {/* Always show toggle button */}
       <button
         ref={buttonRef}
-        className="fixed top-4 left-4 z-30 bg-bgPrimaryColor p-2 rounded-full shadow-lg"
+        className="fixed top-4 left-4 z-50 bg-bgPrimaryColor p-2 rounded-full shadow-lg"
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Toggle sidebar"
         suppressHydrationWarning={true}
@@ -77,8 +77,8 @@ const Sidebar = () => {
       {/* Sidebar: width 0 when closed, 250px when open */}
       <div
         ref={sidebarRef}
-        className={`fixed top-0 left-0 h-screen bg-bgSecondaryColor py-6 px-4 flex flex-col justify-between z-20 transition-all duration-300 ${
-          isOpen ? 'w-[250px]' : 'w-[70px] overflow-hidden'
+        className={`fixed top-0 left-0 h-screen bg-bgSecondaryColor flex flex-col justify-between z-40 transition-all duration-300 ${
+          isOpen ? 'w-[250px] px-4 py-6' : 'w-0 md:w-[70px] px-0 md:px-4 py-6 overflow-hidden'
         }`}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}

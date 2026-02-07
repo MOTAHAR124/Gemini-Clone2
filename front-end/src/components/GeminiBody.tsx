@@ -94,7 +94,7 @@ const GeminiBody = () => {
   }, [conversation, loading]);
 
   return (
-    <div className="flex-1 min-h-screen relative ml-0">
+    <div className="flex-1 min-h-screen relative ml-0 md:ml-[70px]">
       {/* Fixed Header */}
       <div className="fixed top-0 left-0 right-0 flex items-center justify-end p-2 sm:p-3 md:p-5 text-base sm:text-lg md:text-xl text-gray-400 bg-bgPrimaryColor z-10">
         <CircleUserRound size={28} className="text-softTextColor sm:w-8 sm:h-8 md:w-10 md:h-10" />

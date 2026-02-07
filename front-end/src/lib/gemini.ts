@@ -25,8 +25,35 @@ async function runChat(prompt: string, conversation?: ConversationMessage[], sig
     }),
     signal,
   });
-  if (!response.ok) throw new Error("Backend error");
-  const data = await response.json();
+
+  const contentType = response.headers.get("content-type") || "";
+
+  if (!response.ok) {
+    let details = "";
+    try {
+      if (contentType.includes("application/json")) {
+        const errorJson = (await response.json()) as { error?: string; message?: string };
+        details = errorJson?.error || errorJson?.message || JSON.stringify(errorJson);
+      } else {
+        details = await response.text();
+      }
+    } catch {
+      // ignore parsing errors, fall back to generic message below
+    }
+
+    throw new Error(details ? `Backend error (${response.status}): ${details}` : `Backend error (${response.status})`);
+  }
+
+  if (!contentType.includes("application/json")) {
+    const text = await response.text();
+    throw new Error(
+      `Expected JSON from /api/gemini but received ${contentType || "unknown content-type"}. ` +
+        `This is often caused by auth middleware intercepting API routes. Response starts with: ${JSON.stringify(text.slice(0, 120))}`
+    );
+  }
+
+  const data = (await response.json()) as { text?: string };
+  if (!data?.text) throw new Error("Backend error: missing 'text' in response");
   return data.text;
 }
 

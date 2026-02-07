@@ -45,7 +45,7 @@ const FilePreview: React.FC<FilePreviewProps> = ({
   }
 
   return (
-    <div className="fixed bottom-[140px] left-0 right-0 z-10">
+    <div className="fixed bottom-[140px] left-0 md:left-[70px] right-0 z-10">
       <div className="max-w-full sm:max-w-[600px] md:max-w-[900px] mx-auto px-2 sm:px-4 md:px-5 py-3">
         <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
           {uploadedFiles.map((file) => (

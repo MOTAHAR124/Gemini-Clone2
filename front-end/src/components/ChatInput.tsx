@@ -56,7 +56,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
       />
 
       {/* Fixed Footer */}
-      <div className="fixed bottom-0 left-0 right-0 bg-bgPrimaryColor z-10">
+      <div className="fixed bottom-0 left-0 md:left-[70px] right-0 bg-bgPrimaryColor z-10">
         <div className="max-w-full sm:max-w-[600px] md:max-w-[900px] mx-auto px-2 sm:px-4 md:px-5 py-2 sm:py-3 md:py-4">
           <form onSubmit={handleSubmit}>
             <div className="flex items-center justify-between gap-2 sm:gap-3 md:gap-5 bg-bgSecondaryColor py-1 sm:py-2 md:py-2.5 px-2 sm:px-3 md:px-5 rounded-full">
